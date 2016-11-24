@@ -1,0 +1,33 @@
+{
+  "name": "notagym",
+  "version": "1.0.0",
+  "description": "Notation app for gymnastic competitions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "babel-node": "babel-node"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Euregan/notagym.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Euregan/notagym/issues"
+  },
+  "homepage": "https://github.com/Euregan/notagym#readme",
+  "dependencies": {
+    "hogan.js": "^3.0.2",
+    "mysql": "^2.12.0",
+    "rlite-router": "^1.1.3",
+    "sequelize": "^3.24.6"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-plugin-transform-flow-strip-types": "^6.18.0",
+    "babel-preset-latest": "^6.16.0",
+    "flow-bin": "^0.36.0"
+  }
+}
