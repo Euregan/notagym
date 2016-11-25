@@ -20,6 +20,12 @@ module.exports = http.createServer(function(request, response) {
         }))
     })
 
+    router.add('ranking/:competition', function (r) {
+        send(templates.ranking({
+            competition: r.params.competition
+        }))
+    })
+
 
     router.add('js/:file', function (r) {
     	response.setHeader('content-type', 'script/javascript')

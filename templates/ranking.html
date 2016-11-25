@@ -1,0 +1,40 @@
+{{=<% %>=}}
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+<div id="app">
+    <table>
+        <tbody>
+            <tr v-for="(notation, index) in ranking" :id="index">
+                <td>{{index + 1}}</td>
+                <td>{{notation.member.firstName}} {{notation.member.lastName}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    // window.onload = function() {
+        var app = new Vue({
+            el: '#app',
+            methods: {
+                init() {
+                    var vue = this
+
+                    var getRanking = function() {
+                        fetch('/api/ranking/' + <% competition %>)
+                            .then(function(result) { return result.json() })
+                            .then(function(result) { vue.ranking = result })
+                            .then(function() { setTimeout(getRanking, 1000) })
+                    }
+
+                    getRanking()
+                }
+            },
+            data: {
+                ranking: []
+            }
+        })
+        app.init()
+    // }
+</script>
+<%={{ }}=%>
