@@ -34,8 +34,11 @@ module.exports = (database: string, username: string, password: string) => {
     })
 
     tables.Notation.belongsTo(tables.Member)
+    tables.Member.hasMany(tables.Notation)
     tables.Notation.belongsTo(tables.Competition)
+    tables.Competition.hasMany(tables.Notation)
     tables.Notation.belongsTo(tables.Rigging)
+    tables.Rigging.hasMany(tables.Notation)
 
     tables.Member.sync().then(() => {
         tables.Competition.sync().then(() => {

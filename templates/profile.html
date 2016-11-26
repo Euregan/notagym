@@ -1,0 +1,74 @@
+{{=<% %>=}}
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+<div id="app">
+    <h2>{{member.firstName}} {{member.lastName}}</h2>
+    <table>
+        <thead>
+            <tr>
+                <td></td>
+                <td>
+                    Difficulté
+                </td>
+                <td>
+                    Exécution
+                </td>
+                <td>
+                    Pénalité
+                </td>
+                <td>
+                    Bonus
+                </td>
+                <td>
+                    Score
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(notation, index) in member.notations" :id="index">
+                <td>
+                    <a :href="'/competition/' + notation.competition.id" >
+                        {{notation.competition.name}} - {{notation.rigging.name}}
+                    </a>
+                </td>
+                <td>
+                    {{notation.difficulty}}
+                </td>
+                <td>
+                    {{notation.execution}}
+                </td>
+                <td>
+                    {{notation.penalty}}
+                </td>
+                <td>
+                    {{notation.bonus}}
+                </td>
+                <td>
+                    {{notation.score}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    // window.onload = function() {
+        var app = new Vue({
+            el: '#app',
+            methods: {
+                fetchMember() {
+                    var vue = this
+
+                    fetch('/api/members/<% member %>')
+                        .then(function(result) { return result.json() })
+                        .then(function(result) { vue.member = result })
+                }
+            },
+            data: {
+                member: {}
+            }
+        })
+        app.fetchMember()
+    // }
+</script>
+<%={{ }}=%>

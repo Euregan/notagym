@@ -14,5 +14,6 @@ const template = (template: string) => {
 module.exports = {
     notation: template('notation'),
     ranking: template('ranking'),
-    members: template('members')
+    members: template('members'),
+    profile: template('profile')
 }

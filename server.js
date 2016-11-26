@@ -30,6 +30,12 @@ module.exports = http.createServer(function(request, response) {
         send(templates.members())
     })
 
+    router.add('profile/:member', function (r) {
+        send(templates.profile({
+            member: r.params.member
+        }))
+    })
+
 
     router.add('js/:file', function (r) {
     	response.setHeader('content-type', 'script/javascript')
@@ -93,6 +99,24 @@ module.exports = http.createServer(function(request, response) {
         })
     })
 
+    router.add('api/members/:member', function(r) {
+        response.setHeader('Content-Type', 'application/json')
+        database.Member.findAll({
+            where: {id: r.params.member},
+            include: [
+                {
+                    model: database.Notation,
+                    include: [
+                        {model: database.Competition},
+                        {model: database.Rigging}
+                    ]
+                }
+            ]
+        }).then((result) => {
+            send(JSON.stringify(result[0]))
+        })
+    })
 
-    router.run(request.url)
+
+    if (!router.run(request.url)) send('404')
 })
