@@ -1,0 +1,34 @@
+{{=<% %>=}}
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+<div id="app">
+    <table>
+        <tbody>
+            <tr v-for="(member, index) in members" :id="index">
+                <td><a :href="'/profile/' + member.id" >{{member.firstName}} {{member.lastName}}</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    // window.onload = function() {
+        var app = new Vue({
+            el: '#app',
+            methods: {
+                fetchMembers() {
+                    var vue = this
+
+                    fetch('/api/members')
+                        .then(function(result) { return result.json() })
+                        .then(function(result) { vue.members = result })
+                }
+            },
+            data: {
+                members: []
+            }
+        })
+        app.fetchMembers()
+    // }
+</script>
+<%={{ }}=%>

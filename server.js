@@ -26,6 +26,10 @@ module.exports = http.createServer(function(request, response) {
         }))
     })
 
+    router.add('members', function () {
+        send(templates.members())
+    })
+
 
     router.add('js/:file', function (r) {
     	response.setHeader('content-type', 'script/javascript')
@@ -81,6 +85,14 @@ module.exports = http.createServer(function(request, response) {
             send(JSON.stringify(result))
         })
     })
+
+    router.add('api/members', function() {
+        response.setHeader('Content-Type', 'application/json')
+        database.Member.findAll().then((result) => {
+            send(JSON.stringify(result))
+        })
+    })
+
 
     router.run(request.url)
 })
