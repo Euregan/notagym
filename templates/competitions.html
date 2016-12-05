@@ -1,0 +1,59 @@
+{{=<% %>=}}
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+<div id="app">
+    <table>
+        <tbody>
+            <tr v-for="(competition, index) in competitions" :id="index">
+                <td><a :href="'/competition/' + competition.id" >{{competition.name}}</a></td>
+                <td>{{competition.dateBegining}} - {{competition.dateEnding}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div>
+        <input type="text" v-model="newCompetition.name">
+        <input type="date" v-model="newCompetition.dateBegining">
+        <input type="date" v-model="newCompetition.dateEnding">
+        <button v-on:click="createCompetition">Ajouter la compétition</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // window.onload = function() {
+        var app = new Vue({
+            el: '#app',
+            methods: {
+                fetchCompetitions() {
+                    var vue = this
+
+                    fetch('/api/competitions')
+                        .then(function(result) { return result.json() })
+                        .then(function(result) { vue.competitions = result })
+                },
+                createCompetition() {
+                    var vue = this
+
+                    var corps = new FormData()
+                    corps.append('json', JSON.stringify(this.newCompetition))
+
+                    var options = {
+                        method: 'POST',
+                        headers: new Headers(),
+                        mode: 'cors',
+                        cache: 'default',
+                        body: corps
+                    }
+
+                    fetch('/api/competitions', options)
+                        .then(vue.fetchCompetitions)
+                }
+            },
+            data: {
+                competitions: [],
+                newCompetition: {}
+            }
+        })
+        app.fetchCompetitions()
+    // }
+</script>
+<%={{ }}=%>

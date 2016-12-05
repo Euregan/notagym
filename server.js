@@ -36,11 +36,22 @@ module.exports = http.createServer(function(request, response) {
         }))
     })
 
+    router.add('competitions', function() {
+        send(templates.competitions())
+    })
+
+    router.add('competition/:competition', function(r) {
+        send(templates.competition({
+            competition: r.params.competition
+        }))
+    })
+
 
     router.add('js/:file', function (r) {
     	response.setHeader('content-type', 'script/javascript')
         send(fs.readFileSync("src/js/" + r.params.file))
     })
+
 
     router.add('api/notation/:competition/:member/:rigging', function(r) {
         response.setHeader('Content-Type', 'application/json')
@@ -114,6 +125,64 @@ module.exports = http.createServer(function(request, response) {
             ]
         }).then((result) => {
             send(JSON.stringify(result[0]))
+        })
+    })
+
+    router.add('api/competitions', function() {
+        response.setHeader('Content-Type', 'application/json')
+        if (request.method === 'POST') {
+			var result = ''
+
+			request.on('data', function(chunk) {
+				result += chunk
+			})
+
+			request.on('end', function() {
+                let competition = JSON.parse(result.split('\n')[3])
+                database.Competition.create(competition).then(function() {
+                    send(JSON.stringify({ok: true}))
+                })
+            })
+        } else {
+            database.Competition.findAll().then((result) => {
+                send(JSON.stringify(result))
+            })
+        }
+    })
+
+    router.add('api/competitions/:competition', function(r) {
+        response.setHeader('Content-Type', 'application/json')
+        database.Competition.findAll({
+            where: {id: r.params.competition},
+            include: [
+                {
+                    model: database.Notation,
+                    include: [
+                        {model: database.Member},
+                        {model: database.Rigging}
+                    ]
+                }
+            ]
+        }).then((result) => {
+            send(JSON.stringify(result[0]))
+        })
+    })
+
+    router.add('api/competitions/:competition/riggings', function(r) {
+        response.setHeader('Content-Type', 'application/json')
+        database.Rigging.findAll({
+            include: [
+                {
+                    where: {competitionId: r.params.competition},
+                    required: false,
+                    model: database.Notation,
+                    include: [
+                        {model: database.Member}
+                    ]
+                }
+            ]
+        }).then((result) => {
+            send(JSON.stringify(result))
         })
     })
 

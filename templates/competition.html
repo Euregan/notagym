@@ -1,0 +1,62 @@
+{{=<% %>=}}
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+<div id="app">
+    <h2>{{competition.name}}</h2>
+    <div v-for="rigging in riggings">
+        <h3>{{rigging.name}}</h3>
+        <table>
+            <tbody>
+                <tr v-for="(notation, index) in rigging.notations" :id="index">
+                    <td>{{index + 1}}</td>
+                    <td>{{notation.member.firstName}} {{notation.member.lastName}}</td>
+                </tr>
+                </tr>
+            </tbody>
+        </table>
+        <select v-model="rigging.selectedMemberId">
+            <option v-for="member in members" v-bind:value="member.id">
+                {{member.firstName}} {{member.lastName}}
+            </option>
+        </select>
+        <a :href="rigging.selectedMemberId ? '/notation/<% competition %>/' + rigging.selectedMemberId + '/' + rigging.id : ''" :disabled="rigging.selectedMemberId ? false : true">Ajouter une notation</a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // window.onload = function() {
+        var app = new Vue({
+            el: '#app',
+            methods: {
+                getCompetition() {
+                    var vue = this
+
+                    fetch('/api/competitions/<% competition %>')
+                        .then(function(result) { return result.json() })
+                        .then(function(result) { vue.competition = result})
+
+                    fetch('/api/competitions/<% competition %>/riggings')
+                        .then(function(result) { return result.json() })
+                        .then(function(result) {
+                            return result.map(function(rigging) {
+                                rigging.selectedMemberId = null;
+                                return rigging
+                            })
+                        })
+                        .then(function(result) { vue.riggings = result})
+
+                    fetch('/api/members')
+                        .then(function(result) { return result.json() })
+                        .then(function(result) { vue.members = result})
+                },
+            },
+            data: {
+                competition: {},
+                riggings: [],
+                members: []
+            }
+        })
+        app.getCompetition()
+    // }
+</script>
+<%={{ }}=%>

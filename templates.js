@@ -15,5 +15,7 @@ module.exports = {
     notation: template('notation'),
     ranking: template('ranking'),
     members: template('members'),
-    profile: template('profile')
+    profile: template('profile'),
+    competition: template('competition'),
+    competitions: template('competitions')
 }
