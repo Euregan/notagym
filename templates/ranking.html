@@ -3,10 +3,26 @@
 
 <div id="app">
     <table>
+        <thead>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Difficulté</td>
+                <td>Exécution</td>
+                <td>Pénalité</td>
+                <td>Bonus</td>
+                <td>Score</td>
+            </tr>
+        </thead>
         <tbody>
             <tr v-for="(notation, index) in ranking" :id="index">
                 <td>{{index + 1}}</td>
                 <td>{{notation.member.firstName}} {{notation.member.lastName}}</td>
+                <td>{{notation.difficulty}}</td>
+                <td>{{notation.execution}}</td>
+                <td>{{notation.penalty}}</td>
+                <td>{{notation.bonus}}</td>
+                <td>{{notation.score}}</td>
             </tr>
         </tbody>
     </table>
@@ -23,6 +39,13 @@
                     var getRanking = function() {
                         fetch('/api/ranking/<% competition %>/<% rigging %>')
                             .then(function(result) { return result.json() })
+                            .then(function(result) { return result.map(function(notation) {
+                                    notation.score = notation.difficulty + notation.execution - notation.penalty + notation.bonus
+                                    return notation
+                                })})
+                            .then(function(result) { return result.sort(function(a, b) {
+                                    return a.score > b.score ? -1 : b.score > a.score ? 1 : 0
+                                })})
                             .then(function(result) { vue.ranking = result })
                             .then(function() { setTimeout(getRanking, 1000) })
                     }
