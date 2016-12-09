@@ -21,7 +21,7 @@
                     var vue = this
 
                     var getRanking = function() {
-                        fetch('/api/ranking/' + <% competition %>)
+                        fetch('/api/ranking/<% competition %>/<% rigging %>')
                             .then(function(result) { return result.json() })
                             .then(function(result) { vue.ranking = result })
                             .then(function() { setTimeout(getRanking, 1000) })

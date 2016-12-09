@@ -20,9 +20,10 @@ module.exports = http.createServer(function(request, response) {
         }))
     })
 
-    router.add('ranking/:competition', function (r) {
+    router.add('ranking/:competition/:rigging', function (r) {
         send(templates.ranking({
-            competition: r.params.competition
+            competition: r.params.competition,
+            rigging: r.params.rigging
         }))
     })
 
@@ -75,24 +76,13 @@ module.exports = http.createServer(function(request, response) {
 		}
     })
 
-    router.add('api/ranking/:competition', function(r) {
+    router.add('api/ranking/:competition/:rigging', function(r) {
         response.setHeader('Content-Type', 'application/json')
         database.Notation.findAll({
-            where: {competitionId: r.params.competition},
-            include: [
-                {model: database.Member},
-                {model: database.Rigging},
-                {model: database.Competition}
-            ]
-        }).then((result) => {
-            send(JSON.stringify(result))
-        })
-    })
-
-    router.add('api/ranking/:competition/:member', function(r) {
-        response.setHeader('Content-Type', 'application/json')
-        database.Notation.findAll({
-            where: {competitionId: r.params.competition, memberId: r.params.member},
+            where: {
+                competitionId: r.params.competition,
+                riggingId: r.params.rigging
+            },
             include: [
                 {model: database.Member},
                 {model: database.Rigging},
