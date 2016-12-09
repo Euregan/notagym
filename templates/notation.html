@@ -67,7 +67,8 @@
                         body: corps
                     }
 
-                    fetch('/api/notation/' + <% competition %> + '/' + <% member %> + '/' + <% rigging %>, options)
+                    fetch('/api/notation/<% competition %>/<% member %>/<% rigging %>', options)
+                        .then(function() { document.location = '/competition/<% competition %>' })
                 }
             },
             data: {
