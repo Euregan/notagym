@@ -4,7 +4,7 @@
 <div id="app">
     <h2>{{competition.name}}</h2>
     <div v-for="rigging in riggings">
-        <h3>{{rigging.name}}</h3>
+        <h3><a :href="'/ranking/<% competition %>/' + rigging.id">{{rigging.name}}</a></h3>
         <table>
             <tbody>
                 <tr v-for="(notation, index) in rigging.notations" :id="index">
