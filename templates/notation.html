@@ -15,10 +15,10 @@
         <tbody>
             <tr v-for="(grade, index) in notation" :id="index">
                 <td>{{grade.judge.name}}</td>
-                <td><input data-grade="difficulty" v-on:keyup="updateNotation" :value="grade.difficulty" type="number"></td>
-                <td><input data-grade="execution" v-on:keyup="updateNotation" :value="grade.execution" type="number"></td>
-                <td><input data-grade="penalty" v-on:keyup="updateNotation" :value="grade.penalty" type="number"></td>
-                <td><input data-grade="bonus" v-on:keyup="updateNotation" :value="grade.bonus" type="number"></td>
+                <td><input data-grade="difficulty" v-on:keyup="updateNotation" :value="grade.difficulty"></td>
+                <td><input data-grade="execution" v-on:keyup="updateNotation" :value="grade.execution"></td>
+                <td><input data-grade="penalty" v-on:keyup="updateNotation" :value="grade.penalty"></td>
+                <td><input data-grade="bonus" v-on:keyup="updateNotation" :value="grade.bonus"></td>
             </tr>
             <tr>
                 <td></td>
@@ -37,9 +37,13 @@
         return notation.difficulty || notation.execution || notation.penalty || notation.bonus
     }
     var computeTotal = function(notation, grade) {
-        return notation.reduce(function(prev, curr) {
-            return prev + (curr[grade] || 0)
-        }, 0) / notation.filter(notEmpty).length
+        return notation
+            .map(function(curr) { return curr[grade] || "0" })
+            .map(function(curr) { return curr.replace(',', '.') })
+            .map(function(curr) { return parseFloat(!isNaN(curr) ? curr : 0) })
+            .reduce(function(prev, curr) {
+                return prev + curr
+            }, 0) / notation.filter(notEmpty).length
     }
     // window.onload = function() {
         var app = new Vue({
@@ -48,7 +52,7 @@
                 updateNotation(event) {
                     var col = event.target.getAttribute('data-grade')
                     var line = event.target.parentNode.parentNode.getAttribute('id')
-                    var grade = parseInt(event.target.value)
+                    var grade = event.target.value
                     this.notation[line][col] = grade
                     this.totals.difficulty = computeTotal(this.notation, 'difficulty')
                     this.totals.execution = computeTotal(this.notation, 'execution')
